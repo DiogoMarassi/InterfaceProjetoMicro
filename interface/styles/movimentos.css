@@ -1,0 +1,21 @@
+/* styles/movimentos.css */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+button {
+  padding: 10px;
+}
+
+.div-movimentos {
+  display: flex;
+  justify-content: flex-end;
+}
