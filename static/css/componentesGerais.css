@@ -35,10 +35,11 @@ body {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+
 }
 
 .botao-delete {
-  background-color: #d83f3f;
+  background-color: #c45252;
   color: rgb(255, 255, 255);
   border: none;
   padding: 6px 6px;
@@ -55,4 +56,9 @@ body {
 .sucesso {
   color: green;
   font-weight: bold;
+}
+
+.href {
+  text-decoration: none;
+  color: black;
 }

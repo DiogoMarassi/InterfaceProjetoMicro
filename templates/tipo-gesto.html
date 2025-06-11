@@ -8,13 +8,13 @@
 </head>
 <body>
   <div class="container">
-    <button class='botao' onclick="location.href='index.html'">Home</button>
+    <a class="botao" href="{{ url_for('home') }}">Home</a>
     <label>Sobre o que será o seu gesto?</label>
     <select>
       <option class="botao">acender luz</option>
       <option class="botao">tocar musica</option>
     </select>
-    <button class="botao" onclick="location.href='gravar.html'">Seguinte</button>
+    <a class="botao" href="{{ url_for('gravar') }}">Seguinte</a>
   </div>
 </body>
 </html>

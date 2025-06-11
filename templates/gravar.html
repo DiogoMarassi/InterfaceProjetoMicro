@@ -7,9 +7,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/componentesGerais.css') }}">
 </head>
 <body>
+  <a class="botao" href="{{ url_for('home') }}">Home</a>
   <div class="gravacao">
-    <button class="botao">Iniciar gravação</button>
-    <button class="botao" onclick="location.href='finalizar.html'">Parar Gravação</button>
+    <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Iniciar gravação</a>
+   <a class="botao" href="{{ url_for('finalizar') }}">Encerrar gravação</a>
   </div>
 </body>
 </html>

@@ -8,15 +8,36 @@
 </head>
 <body>
   <div class="container">
-    <button class='botao' onclick="location.href='index.html'">Home</button>
+    <a class="botao" href="{{ url_for('home') }}">Home</a>
     <div class="botoes">
-      <button class="botao" onclick="location.href='gravacao-iniciou.html'">Gravar novamente</button>
-      <button class="botao">Parar Gravação</button>
+      <a class="botao" href="{{ url_for('mov_pre_definidos') }}">Gravar outro gesto</a>
     </div>
-    <p class="sucesso">Seu gesto foi gravado!</p>
-    <label>Insira o nome do seu novo gesto:</label>
-    <input type="text" placeholder="nome do gesto...">
-    <button class="botao">Cadastrar</button>
+    <p class="sucesso">Seu gesto foi definido</p>
+
+    <form action="{{ url_for('cadastrarMovimento') }}" method="POST">
+      <h3><label>Representação do gesto do novo movimento:</label></h3><br>
+      {% if gesto %}
+      <input class="input" type="text" name="gesto" value="{{ gesto }}" required readonly><br><br>
+      {% else %}
+        <input class="input" type="text" name="gesto" placeholder="B, O, C..." required><br><br>
+      {% endif %}
+
+
+      <h3><label>Selecione o significado do novo gesto:</label></h3><br>
+      <select class="input" name="significado" required>
+        <option value="" disabled selected>Escolha um significado</option>
+        <option value="Acender luz da sala">Acender luz da sala</option>
+        <option value="Apagar luz do banheiro">Apagar luz do banheiro</option>
+        <option value="Tocar música">Tocar música</option>
+        <option value="Aumentar volume">Aumentar volume</option>
+        <option value="Desligar tudo">Desligar tudo</option>
+      </select><br><br>
+
+      <button class="botao" type="submit">Cadastrar movimento</button>
+    </form>
+    {% if erro %}
+    <p class="erro">{{ erro }}</p>
+    {% endif %}
   </div>
 </body>
 </html>

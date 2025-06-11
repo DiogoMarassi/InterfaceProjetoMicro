@@ -1,0 +1,18 @@
+[
+    {
+        "gesto": "C",
+        "significado": "Abrir porta da mae"
+    },
+    {
+        "gesto": "W",
+        "significado": "Lugar"
+    },
+    {
+        "gesto": "T",
+        "significado": "Apagar luz do banheiro"
+    },
+    {
+        "gesto": "V",
+        "significado": "Acender luz da sala"
+    }
+]

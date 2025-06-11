@@ -8,9 +8,8 @@
 </head>
 <body>
   <div class="container">
-    <button class='botao' onclick="location.href='movimentos.html'">Lista de movimentos</button>
-    <button class='botao' onclick="location.href='tipo-gesto.html'">Cadastrar movimentos</button>
-    <button class='botao'>Registrar Spotify</button>
+    <a class="botao" href="{{ url_for('movimentos') }}">Lista de movimentos</a>
+    <a class="botao" href="{{ url_for('mov_pre_definidos') }}">Cadastrar movimentos</a>
   </div>
 </body>
 </html>

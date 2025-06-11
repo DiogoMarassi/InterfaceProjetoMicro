@@ -5,14 +5,16 @@
   <title>Gravar Gesto</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/gravar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/componentesGerais.css') }}">
-
 </head>
 <body>
   <a class="botao" href="{{ url_for('home') }}">Home</a>
+  <h3>Movimentos Pré-definidos</h3>
+    <a class="botao" href="{{ url_for('finalizar', gesto='O') }}">O</a>
+    <a class="botao" href="{{ url_for('finalizar', gesto='V') }}">V</a>
+    <a class="botao" href="{{ url_for('finalizar', gesto='U') }}">U</a>
   <div class="gravacao">
+    <h3>Gravar seu novo movimento</h3>
     <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Iniciar gravação</a>
-    <a class="botao" href="{{ url_for('finalizar') }}">Encerrar gravação</a>
   </div>
-  <p class="sucesso">A gravação iniciou</p>
 </body>
 </html>
