@@ -1,7 +1,83 @@
-/* styles/tipo-gesto.css */
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container principal */
 .container {
+  background-color: white;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  align-items: center;
+  gap: 25px;
+  width: 90%;
+  max-width: 500px;
+}
+
+/* Botões */
+a.botao {
+  display: inline-block;
+  padding: 10px 24px;
+  background-color: #0077cc;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+}
+
+a.botao:hover {
+  background-color: #005fa3;
+  transform: scale(1.05);
+}
+
+a.botao:active {
+  transform: scale(0.98);
+}
+
+/* Label */
+label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0077cc;
+}
+
+/* Select */
+select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #0077cc;
+}
+
+/* Remoção incorreta de classe nos options */
+option {
+  background-color: white;
+  color: #333;
 }

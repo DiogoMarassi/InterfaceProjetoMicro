@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from flask import Flask, render_template, request, redirect, url_for
-from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento
+from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos
 from services.mqtt_service import publicar_gesto
-
+from services.significados_service import listar_significados
 app = Flask(__name__)
 
 # Integração com o Home Assistant
@@ -69,6 +69,41 @@ def cadastrarMovimento():
 def removerMovimento(gesto):
     remover_movimento(gesto)
     return redirect(url_for('movimentos'))
+
+@app.route('/editar/<gesto>', methods=['GET', 'POST'])
+def editarMovimento(gesto):
+    print("Entrou na rota editar")
+    movimentos = listar_movimentos()
+    significados = listar_significados()
+    print("Significados:", significados)
+
+    movimento = next((m for m in movimentos if m['gesto'] == gesto), None)
+
+    if movimento is None:
+        return f"Gesto '{gesto}' não encontrado.", 404
+
+    if request.method == 'POST':
+        novo_gesto = request.form['novo_gesto']
+        novo_significado = request.form['significado']
+
+        try:
+            editar_movimento(gesto, novo_gesto, novo_significado)
+            return redirect(url_for('movimentos'))
+        except ValueError as e:
+            return render_template(
+                'editarMovimento.html',
+                gesto=novo_gesto,
+                significado=novo_significado,
+                significados=significados,
+                erro=str(e)
+            )
+
+    return render_template(
+        'editarMovimento.html',
+        gesto=movimento['gesto'],
+        significado=movimento['significado'],
+        significados=significados
+    )
 
 
 if __name__ == '__main__':

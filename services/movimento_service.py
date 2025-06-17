@@ -26,6 +26,33 @@ def adicionar_movimento(gesto, significado):
     })
     salvar_movimentos(movimentos)
 
+def editar_movimento(gesto_antigo, novo_gesto, novo_significado):
+    movimentos = listar_movimentos()
+
+    movimento = next((m for m in movimentos if m['gesto'] == gesto_antigo), None)
+
+    if movimento is None:
+        raise ValueError("Gesto não encontrado.")
+
+    # Verifica se o novo gesto já existe (e não é o próprio gesto que estamos editando)
+    if novo_gesto != gesto_antigo and any(m['gesto'] == novo_gesto for m in movimentos):
+        raise ValueError("O novo gesto já existe.")
+
+    # Atualiza os dados
+    movimento['gesto'] = novo_gesto
+    movimento['significado'] = novo_significado
+
+    # Salva no JSON
+    with open('data/movimentos.json', 'w', encoding='utf-8') as arquivo:
+        json.dump(movimentos, arquivo, ensure_ascii=False, indent=4)
+
+
+
+
+def listar_movimentos():
+    with open('data/movimentos.json', 'r', encoding='utf-8') as arquivo:
+        return json.load(arquivo)  # Retorna uma lista de dicionários
+
 
 def remover_movimento(gesto):
     movimentos = carregar_movimentos()

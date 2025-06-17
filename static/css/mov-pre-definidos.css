@@ -1,19 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Reset básico */
 * {
   margin: 0;
@@ -54,29 +38,17 @@ flex-direction: column;
 a.botao {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #cc0000;
+  background-color: #0077cc;
   color: white;
   text-decoration: none;
   border-radius: 8px;
   transition: background-color 0.3s ease, transform 0.2s ease;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 20px;
-}
-
-a {
-  display: inline-block;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
 }
 
 a.botao:hover {
-  background-color: #a30000;
+  background-color: #005fa3;
   transform: scale(1.05);
 }
 
@@ -84,27 +56,6 @@ a.botao:active {
   transform: scale(0.98);
 }
 
-.botaoHome:hover {
-  background-color: #0b52ed;
-  transform: scale(1.05);
-}
-
-.botaoHome:active {
-  transform: scale(0.98);
-}
-
-.botaoHome {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 14px 20px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
 /* Seções internas */
 .div-mov-pre, .gravacao {
   background-color: #fafafa;
@@ -122,7 +73,7 @@ a.botao:active {
 }
 .div-mov-pre h3, .gravacao h3 {
   margin-bottom: 10px;
-  color: #cc0000;
+  color: #0077cc;
 }
 
 /* Home link isolado no topo */

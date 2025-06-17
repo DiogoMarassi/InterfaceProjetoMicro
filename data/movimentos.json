@@ -5,7 +5,7 @@
     },
     {
         "gesto": "W",
-        "significado": "Lugar"
+        "significado": "Tocar música"
     },
     {
         "gesto": "T",
@@ -14,5 +14,9 @@
     {
         "gesto": "V",
         "significado": "Acender luz da sala"
+    },
+    {
+        "gesto": "O",
+        "significado": "Apagar luz do banheiro"
     }
 ]

@@ -3,18 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>Gravar Gesto</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/gravar.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/componentesGerais.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mov-pre-definidos.css') }}">
 </head>
 <body>
-  <a class="botao" href="{{ url_for('home') }}">Home</a>
-  <h3>Movimentos Pré-definidos</h3>
-    <a class="botao" href="{{ url_for('finalizar', gesto='O') }}">O</a>
-    <a class="botao" href="{{ url_for('finalizar', gesto='V') }}">V</a>
-    <a class="botao" href="{{ url_for('finalizar', gesto='U') }}">U</a>
-  <div class="gravacao">
-    <h3>Gravar seu novo movimento</h3>
-    <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Iniciar gravação</a>
+  <div class="all-mov-pre">
+    <a class="botao" href="{{ url_for('home') }}">Home</a>
+    <div class="div-mov-pre">
+      <h3>Movimentos Pré-definidos</h3>
+      <div class="botoes">
+        <a class="botao" href="{{ url_for('finalizar', gesto='O') }}">O</a>
+        <a class="botao" href="{{ url_for('finalizar', gesto='V') }}">V</a>
+        <a class="botao" href="{{ url_for('finalizar', gesto='U') }}">U</a>
+      </div>
+      </div>
+    <div class="gravacao">
+      <h3>Gravar seu novo movimento</h3>
+      <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Iniciar gravação</a>
+    </div>
   </div>
 </body>
 </html>

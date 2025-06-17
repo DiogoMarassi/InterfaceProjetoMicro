@@ -4,20 +4,22 @@
   <meta charset="UTF-8">
   <title>Movimentos</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/movimentos.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/componentesGerais.css') }}">
 </head>
 <body>
-  <div class="'container">
-    <a class="botao" href="{{ url_for('home') }}">Home</a><table>
-      <thead>
-        <tr>
-          <th>GESTO</th>
-          <th>SIGNIFICADO</th>
-        </tr>
-      </thead>
+  <a class="botao" href="{{ url_for('home') }}">Home</a>
+  <div class="'container"> 
+    <table>
+      <div class="botoes">
+        <thead>
+          <tr>
+            <th>GESTO</th>
+            <th>SIGNIFICADO</th>
+          </tr>
+        </thead>
+      </div>
       <tbody>
         {% for m in movimentos %}
-        <tr><td>{{ m.gesto }}</td><td class="div-movimentos">{{ m.significado }}<a class='botao-delete' href="{{ url_for('removerMovimento', gesto=m.gesto) }}">Apagar</a></td></tr>
+        <tr><td>{{ m.gesto }}</td><td class="div-movimentos">{{ m.significado }}<a class='botao-edit' href="{{ url_for('editarMovimento', gesto=m.gesto) }}">Editar</a><a class='botao-delete' href="{{ url_for('removerMovimento', gesto=m.gesto) }}">Apagar</a></td></tr>
         {% endfor %}
       </tbody>
     </table>
