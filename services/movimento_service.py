@@ -16,17 +16,23 @@ def salvar_movimentos(movimentos):
 def adicionar_movimento(gesto, significado):
     movimentos = carregar_movimentos()
 
-    # Verifica se já existe um gesto com o mesmo nome
+    # Verifica se já existe um gesto com o mesmo nome (case-insensitive)
     if any(m["gesto"].lower() == gesto.lower() for m in movimentos):
         raise ValueError(f"Gesto '{gesto}' já existe.")
+
+    # Verifica se já existe um significado com o mesmo nome (case-insensitive)
+    if any(m["significado"].lower() == significado.lower() for m in movimentos):
+        raise ValueError(f"Significado '{significado}' já existe.")
 
     movimentos.append({
         "gesto": gesto,
         "significado": significado
     })
+
     salvar_movimentos(movimentos)
 
-def editar_movimento(gesto_antigo, novo_gesto, novo_significado):
+
+def editar_movimento(gesto_antigo, novo_gesto, significado_antigo, novo_significado):
     movimentos = listar_movimentos()
 
     movimento = next((m for m in movimentos if m['gesto'] == gesto_antigo), None)
@@ -37,6 +43,10 @@ def editar_movimento(gesto_antigo, novo_gesto, novo_significado):
     # Verifica se o novo gesto já existe (e não é o próprio gesto que estamos editando)
     if novo_gesto != gesto_antigo and any(m['gesto'] == novo_gesto for m in movimentos):
         raise ValueError("O novo gesto já existe.")
+
+    # Verifica se o novo significado já existe (e não é o próprio significado que estamos editando)
+    if novo_significado != significado_antigo and any(m['significado'] == novo_significado for m in movimentos):
+        raise ValueError("O novo significado já existe.")
 
     # Atualiza os dados
     movimento['gesto'] = novo_gesto

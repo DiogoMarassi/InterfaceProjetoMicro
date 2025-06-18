@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Clima Atual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ver-tempo.css') }}">
+
+</head>
+    <a class="botao" href="{{ url_for('home') }}">Home</a>
+<body>
+
+    <ul>
+        <li><strong>Temperatura:</strong> {{ clima.temperatura }}°C</li>
+        <li><strong>Condição:</strong> {{ clima.condicao }}</li>
+        <li><strong>Umidade:</strong> {{ clima.umidade }}</li>
+        <li><strong>Vento:</strong> {{ clima.vento }} km/h</li>
+    </ul>
+</body>
+</html>

@@ -1,14 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask import Flask, render_template, request, redirect, url_for
 from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos
-from services.mqtt_service import publicar_gesto
+from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rotinas, atualizar_rotinas
 from services.significados_service import listar_significados
 app = Flask(__name__)
 
 # Integração com o Home Assistant
 @app.route('/executar/<gesto>')
 def executar(gesto):
-    gesto = gesto
+    gesto = "\"" + gesto + "\""
     publicar_gesto(gesto)
     return f"Gesto '{gesto}' enviado via MQTT!"
 
@@ -16,6 +16,15 @@ def executar(gesto):
 @app.route('/index')
 def home():
     return render_template('index.html')
+
+# Página inicial
+@app.route('/ver_tempo')
+def ver_tempo():
+    try:
+        clima = solicitar_clima()
+        return render_template('ver-tempo.html', clima=clima)
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
 
 # Página inicial
 @app.route('/mov-pre-definidos')
@@ -39,8 +48,9 @@ def gravar():
 
 @app.route('/finalizar')
 def finalizar():
+    significados = listar_significados()
     gesto = request.args.get('gesto', '') 
-    return render_template('finalizar.html', gesto=gesto)
+    return render_template('finalizar.html', gesto=gesto, significados=significados)
 
 # Lista de movimentos
 @app.route('/movimentos')
@@ -53,16 +63,17 @@ def movimentos():
 def cadastrarMovimento():
     gesto = request.form['gesto']
     significado = request.form['significado']
+    significados = listar_significados()
 
     try:
         adicionar_movimento(gesto, significado)
-        return redirect(url_for('movimentos'))
+        return redirect(url_for('movimentos', gesto=gesto, significado=significado, significados=significados) )
     except ValueError as e:
         return render_template(
             'finalizar.html',
             erro=str(e),
-            gesto=gesto,
             significado=significado,
+            significados=significados,
         )
 
 @app.route('/remover/<gesto>')
@@ -70,12 +81,18 @@ def removerMovimento(gesto):
     remover_movimento(gesto)
     return redirect(url_for('movimentos'))
 
+@app.route('/ver_rotinas')
+def ver_rotinas():
+    rotinas_atualizadas = solicitar_rotinas()
+    atualizar_rotinas(rotinas_atualizadas)
+    return render_template(
+        'index.html', sucesso = True)
+
 @app.route('/editar/<gesto>', methods=['GET', 'POST'])
 def editarMovimento(gesto):
     print("Entrou na rota editar")
     movimentos = listar_movimentos()
     significados = listar_significados()
-    print("Significados:", significados)
 
     movimento = next((m for m in movimentos if m['gesto'] == gesto), None)
 
@@ -86,8 +103,10 @@ def editarMovimento(gesto):
         novo_gesto = request.form['novo_gesto']
         novo_significado = request.form['significado']
 
+        significado_antigo = movimento['significado']  # <- Pegando o significado atual (antigo)
+
         try:
-            editar_movimento(gesto, novo_gesto, novo_significado)
+            editar_movimento(gesto, novo_gesto, significado_antigo, novo_significado)
             return redirect(url_for('movimentos'))
         except ValueError as e:
             return render_template(
@@ -104,6 +123,7 @@ def editarMovimento(gesto):
         significado=movimento['significado'],
         significados=significados
     )
+
 
 
 if __name__ == '__main__':

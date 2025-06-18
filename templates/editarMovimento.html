@@ -3,32 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Movimento</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editarMovimento.css') }}">
+
 </head>
 <body>
-  <h1>Editar Movimento</h1>
-  <a href="{{ url_for('home') }}">Home</a>
+  <div class="container">
+    <a class="botao" href="{{ url_for('home') }}">Home</a>
 
-  <form action="{{ url_for('editarMovimento', gesto=gesto) }}" method="POST">
-    <!-- Campo para editar o gesto -->
-    <label>Gesto:</label><br>
-    <input class="input" type="text" name="novo_gesto" value="{{ gesto }}" required><br><br>
+    <form action="{{ url_for('editarMovimento', gesto=gesto) }}" method="POST">
+      <label>Gesto:</label><br>
+      <input class="input" type="text" name="novo_gesto" value="{{ gesto }}" required><br>
 
-    <!-- Select com os significados carregados do JSON -->
-    <label>Significado:</label><br>
-    <select class="input" name="significado" required>
-      <option value="" disabled>Escolha um significado</option>
-      {% for s in significados %}
-        <option value="{{ s }}" {% if s == significado %}selected{% endif %}>
-          {{ s }}
-        </option>
-      {% endfor %}
-    </select><br><br>
+      <label>Significado:</label><br>
+      <select class="input" name="significado" required>
+        <option value="" disabled>Escolha um significado</option>
+        {% for s in significados %}
+          <option value="{{ s }}" {% if s == significado %}selected{% endif %}>
+            {{ s }}
+          </option>
+        {% endfor %}
+      </select><br>
 
-    <button class="botao" type="submit">Salvar Alterações</button>
-  </form>
+      <button class="botao" type="submit">Salvar Alterações</button>
+    </form>
 
-  {% if erro %}
-    <p style="color: red;">{{ erro }}</p>
-  {% endif %}
+    {% if erro %}
+      <p>{{ erro }}</p>
+    {% endif %}
+  </div>
 </body>
+
 </html>

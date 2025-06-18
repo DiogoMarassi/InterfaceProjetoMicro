@@ -7,8 +7,17 @@
 </head>
 <body>
   <div class="container">
-    <a class="botao" href="{{ url_for('movimentos') }}">Lista de movimentos</a>
-    <a class="botao" href="{{ url_for('mov_pre_definidos') }}">Cadastrar movimentos</a>
+      <a class="botao" href="{{ url_for('movimentos') }}">Lista de movimentos</a>
+      <a class="botao" href="{{ url_for('mov_pre_definidos') }}">Cadastrar movimentos</a>
+      <a class="botao" href="{{ url_for('ver_tempo') }}">Visualizar tempo</a>
+      <a class="botao" href="{{ url_for('ver_rotinas') }}">Atualizar rotinas</a>
+
+      {% if sucesso %}
+          <p style="color: green; margin-top: 16px; text-align: center;">
+              Rotinas atualizadas com sucesso.
+          </p>
+      {% endif %}
   </div>
+
 </body>
 </html>

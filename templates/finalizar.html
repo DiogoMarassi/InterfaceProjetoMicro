@@ -24,12 +24,11 @@
 
       <h3><label>Selecione o significado do novo gesto:</label></h3><br>
       <select class="input" name="significado" required>
-        <option value="" disabled selected>Escolha um significado</option>
-        <option value="Acender luz da sala">Acender luz da sala</option>
-        <option value="Apagar luz do banheiro">Apagar luz do banheiro</option>
-        <option value="Tocar música">Tocar música</option>
-        <option value="Aumentar volume">Aumentar volume</option>
-        <option value="Desligar tudo">Desligar tudo</option>
+        {% for s in significados %}
+          <option value="{{ s }}" {% if s == significado %}selected{% endif %}>
+            {{ s }}
+          </option>
+        {% endfor %}
       </select><br><br>
 
       <button class="botao" type="submit">Cadastrar movimento</button>

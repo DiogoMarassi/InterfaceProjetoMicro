@@ -1,22 +1,18 @@
 [
     {
-        "gesto": "C",
-        "significado": "Abrir porta da mae"
-    },
-    {
-        "gesto": "W",
-        "significado": "Tocar música"
-    },
-    {
-        "gesto": "T",
-        "significado": "Apagar luz do banheiro"
-    },
-    {
-        "gesto": "V",
-        "significado": "Acender luz da sala"
+        "gesto": "Y",
+        "significado": "Desligar tudo"
     },
     {
         "gesto": "O",
         "significado": "Apagar luz do banheiro"
+    },
+    {
+        "gesto": "V",
+        "significado": "Tocar música"
+    },
+    {
+        "gesto": "W",
+        "significado": "Aumentar volume"
     }
 ]

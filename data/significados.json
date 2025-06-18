@@ -1,7 +1,8 @@
 [
-  "Acender luz da sala",
-  "Apagar luz do banheiro",
-  "Tocar música",
-  "Aumentar volume",
-  "Desligar tudo"
+    "luz_sala",
+    "luz_vermelha",
+    "musica",
+    "refresh_clima",
+    "refresh_rotinas",
+    "toca_playlist"
 ]
