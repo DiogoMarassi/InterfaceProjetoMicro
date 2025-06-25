@@ -1,8 +1,10 @@
 from flask import Flask, render_template, jsonify
 from flask import Flask, render_template, request, redirect, url_for
-from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos
-from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rotinas, atualizar_rotinas
+from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos, salvar_historico
+from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rotinas, atualizar_rotinas, publicar_spotify, refresh_playlist
 from services.significados_service import listar_significados
+from services.playlists_service import listar_playlists
+
 app = Flask(__name__)
 
 # Integração com o Home Assistant
@@ -49,8 +51,12 @@ def gravar():
 @app.route('/finalizar')
 def finalizar():
     significados = listar_significados()
-    gesto = request.args.get('gesto', '') 
-    return render_template('finalizar.html', gesto=gesto, significados=significados)
+    gesto = request.args.get('gesto', '')
+
+    # AQUI VAMOS IMPLEMENTAR O HISTÓRICO
+    playlists = listar_playlists()
+    salvar_historico(gesto)
+    return render_template('finalizar.html', gesto=gesto, significados=significados, playlist_json=playlists)
 
 # Lista de movimentos
 @app.route('/movimentos')
@@ -63,10 +69,15 @@ def movimentos():
 def cadastrarMovimento():
     gesto = request.form['gesto']
     significado = request.form['significado']
+    genero = request.form['genero']
+    print(genero)
     significados = listar_significados()
+    playlists = listar_playlists()
 
     try:
-        adicionar_movimento(gesto, significado)
+        if significado != 'toca_playlist':
+            genero = ''
+        adicionar_movimento(gesto, significado, genero)
         return redirect(url_for('movimentos', gesto=gesto, significado=significado, significados=significados) )
     except ValueError as e:
         return render_template(
@@ -74,12 +85,18 @@ def cadastrarMovimento():
             erro=str(e),
             significado=significado,
             significados=significados,
+            playlist_json=playlists
         )
 
 @app.route('/remover/<gesto>')
 def removerMovimento(gesto):
     remover_movimento(gesto)
     return redirect(url_for('movimentos'))
+
+@app.route('/tocar_playlist/<genero>')
+def tocarPlaylist(genero):
+    publicar_spotify(genero)
+    return genero
 
 @app.route('/ver_rotinas')
 def ver_rotinas():
@@ -123,6 +140,33 @@ def editarMovimento(gesto):
         significado=movimento['significado'],
         significados=significados
     )
+
+@app.route('/testarMovimento/<gesto>')
+def testarMovimento(gesto):
+    movimentos = carregar_movimentos()
+    print("Gesto recebido:", gesto)
+
+    # Busca o movimento correspondente ao gesto
+    movimento = next((m for m in movimentos if m["gesto"].lower() == gesto.lower()), None)
+    if not movimento:
+        return f"Gesto '{gesto}' não encontrado.", 404
+
+    significado = movimento.get("significado")
+    genero = movimento.get("genero")
+
+    try:
+        if significado.lower() in ("toca_playlist", "toca_musica"):
+            publicar_spotify(genero)
+        elif significado.lower() in "refresh_rotinas":
+            solicitar_rotinas()
+        elif significado.lower() in "refresh_rotinas":
+            refresh_playlist()
+        else:
+            publicar_gesto(f'"{significado}"')  # aspas incluídas se necessário
+        return redirect(url_for('movimentos'))
+    except Exception as e:
+        return f"Erro ao testar gesto: {str(e)}", 500
+
 
 
 

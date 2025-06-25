@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 import json
+from services.playlists_service import listar_playlists
 
 # Configurações MQTT
 MQTT_BROKER = "192.168.0.100"
@@ -9,6 +10,7 @@ MQTT_TOPIC_PUBLISH = "sabre/gesto"
 MQTT_TOPIC_SUBSCRIBE = "clima/atual"
 MQTT_USERNAME = "mqttuser"
 MQTT_PASSWORD = "1234"
+
 MQTT_TOPIC_PUBLISH_ROTINA = "ver/rotina"
 MQTT_TOPIC_SUBSCRIBE_ROTINA = "receber/rotina"
 
@@ -95,6 +97,18 @@ def atualizar_rotinas(dados_recebidos):
     except Exception as e:
         print(f"[ERRO] Falha ao atualizar rotinas: {e}")
 
+def refresh_playlist(dados_recebidos):
+    try:
+        rotinas = dados_recebidos.get('playlist', [])
+
+        with open('data/´playlist.json', 'w', encoding='utf-8') as arquivo:
+            json.dump(rotinas, arquivo, ensure_ascii=False, indent=4)
+
+        print("[OK] Arquivo playlist.json atualizado com sucesso.")
+
+    except Exception as e:
+        print(f"[ERRO] Falha ao atualizar rotinas: {e}")
+
 def solicitar_rotinas(timeout=10):
     global clima_recebido
     clima_recebido = None
@@ -130,23 +144,27 @@ def solicitar_rotinas(timeout=10):
         print(f"[MQTT ERRO] {e}")
         raise e
 
-def publicar_spotify(gesto: str):
+def publicar_spotify(genero: str):
+
     client = mqtt.Client()
     client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
-
+    playlists = listar_playlists()
+    print(str(playlists[str(genero)]))
+    montagem_envio = "{ \"playlist_id\": \"spotify:playlist:" + str(playlists[str(genero)]) + "\"}"
+    print(montagem_envio)
     try:
         client.connect(MQTT_BROKER, MQTT_PORT, 60)
         client.loop_start()
 
-        result = client.publish(MQTT_TOPIC_PUBLISH_SPOTIFY, gesto)
+        result = client.publish(MQTT_TOPIC_PUBLISH_SPOTIFY, montagem_envio)
         result.wait_for_publish()
-        print(f"[MQTT] Gesto '{gesto}' publicado com sucesso.")
+        print(f"[MQTT] Gesto '{genero}' publicado com sucesso.")
 
         client.loop_stop()
         client.disconnect()
 
     except Exception as e:
-        print(f"[MQTT ERRO] Falha ao publicar gesto '{gesto}': {e}")
+        print(f"[MQTT ERRO] Falha ao publicar gesto '{genero}': {e}")
         raise e
     
 

@@ -1,18 +1,42 @@
 [
     {
-        "gesto": "Y",
-        "significado": "Desligar tudo"
+        "gesto": "V",
+        "significado": "luz_sala",
+        "genero": ""
+    },
+    {
+        "gesto": "U",
+        "significado": "luz_vermelha",
+        "genero": ""
     },
     {
         "gesto": "O",
-        "significado": "Apagar luz do banheiro"
+        "significado": "toca_playlist",
+        "genero": "funk"
     },
     {
-        "gesto": "V",
-        "significado": "Tocar música"
+        "gesto": "ER",
+        "significado": "toca_playlist",
+        "genero": "rock"
     },
     {
-        "gesto": "W",
-        "significado": "Aumentar volume"
+        "gesto": "Dj Terroris",
+        "significado": "toca_playlist",
+        "genero": "sertanejo"
+    },
+    {
+        "gesto": "RRRR",
+        "significado": "refresh_rotinas",
+        "genero": ""
+    },
+    {
+        "gesto": "adasdasf",
+        "significado": "toca_playlist",
+        "genero": "jazz"
+    },
+    {
+        "gesto": "asdasdasd",
+        "significado": "playlist",
+        "genero": ""
     }
 ]
