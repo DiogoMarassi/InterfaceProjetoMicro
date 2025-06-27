@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Histórico de Gestos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/historico.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    a.botaoHome {
+      display: block;
+      margin: 20px auto 10px;
+      padding: 10px 20px;
+      background-color: #0077cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      width: 100px;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    a.botaoHome:hover {
+      background-color: #005fa3;
+      transform: scale(1.05);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #0077cc;
+      color: white;
+      font-size: 16px;
+    }
+
+    tr:hover td {
+      background-color: #f9f9f9;
+    }
+
+    .footer-button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 20px;
+      background-color: #0077cc;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .footer-button:hover {
+      background-color: #005fa3;
+    }
+    .setas {
+      text-decoration: solid;
+      font-weight: bold;
+      font-size: 30px;
+    }
+    .container-setas {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="botaoHome" href="{{ url_for('home') }}">Home</a>
+
+  <h1>Histórico de Gestos</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Gesto</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% set mapa = {
+        "Cima": "⬆︎",
+        "Baixo": "⬇︎",
+        "Esquerda": "➡︎",
+        "Direita": "⬅︎",
+        "Frente": "⬈",
+        "Trás": "⬋"
+        } %}
+    {% for h in historico %}
+    <tr>
+        <td>
+
+        {% for g in h.novo_gesto %}
+        <div class="container-setas">
+            <p class="setas">{{ mapa[g] if g in mapa else g }}</p>
+        {% endfor %}
+        </div>
+        </td>
+        <td>{{ h.data }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>

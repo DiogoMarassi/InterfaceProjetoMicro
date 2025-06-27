@@ -1,10 +1,10 @@
 from flask import Flask, render_template, jsonify
 from flask import Flask, render_template, request, redirect, url_for
-from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos, salvar_historico
+from services.movimento_service import carregar_movimentos, adicionar_movimento, remover_movimento, editar_movimento, listar_movimentos
 from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rotinas, atualizar_rotinas, publicar_spotify, refresh_playlist
 from services.significados_service import listar_significados
 from services.playlists_service import listar_playlists
-
+from services.historico_service import salvar_historico, listar_historico
 app = Flask(__name__)
 
 # Integração com o Home Assistant
@@ -14,10 +14,20 @@ def executar(gesto):
     publicar_gesto(gesto)
     return f"Gesto '{gesto}' enviado via MQTT!"
 
+@app.route('/ver_historico')
+def ver_historico():
+    historico = listar_historico()
+    return render_template('historico.html', historico=historico)
+
+@app.route('/ver_gravacao')
+def ver_gravacao():
+    return render_template('visualizar-gravacao.html')
+
 # Página inicial
 @app.route('/index')
 def home():
-    return render_template('index.html')
+    dados = carregar_movimentos()
+    return render_template('index.html', movimentos=dados)
 
 # Página inicial
 @app.route('/ver_tempo')
@@ -75,10 +85,11 @@ def cadastrarMovimento():
     playlists = listar_playlists()
 
     try:
+        lista_gestos = [g.strip().capitalize() for g in gesto.split(',') if g.strip()]
         if significado != 'toca_playlist':
             genero = ''
-        adicionar_movimento(gesto, significado, genero)
-        return redirect(url_for('movimentos', gesto=gesto, significado=significado, significados=significados) )
+        adicionar_movimento(lista_gestos, significado, genero)
+        return redirect(url_for('home', gesto=gesto, significado=significado, significados=significados) )
     except ValueError as e:
         return render_template(
             'finalizar.html',
@@ -91,7 +102,7 @@ def cadastrarMovimento():
 @app.route('/remover/<gesto>')
 def removerMovimento(gesto):
     remover_movimento(gesto)
-    return redirect(url_for('movimentos'))
+    return redirect(url_for('home'))
 
 @app.route('/tocar_playlist/<genero>')
 def tocarPlaylist(genero):

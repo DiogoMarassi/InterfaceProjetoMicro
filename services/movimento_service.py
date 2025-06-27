@@ -18,7 +18,7 @@ def adicionar_movimento(gesto, significado, genero, playlist=None):
     movimentos = carregar_movimentos()
 
     # Verifica se já existe um gesto com o mesmo nome (case-insensitive)
-    if any(m["gesto"].lower() == gesto.lower() for m in movimentos):
+    if any(m["gesto"] == gesto for m in movimentos):
         raise ValueError(f"Gesto '{gesto}' já existe.")
 
     # Verifica se o significado já existe, exceto se for 'toca_playlist'
@@ -64,31 +64,6 @@ def editar_movimento(gesto_antigo, novo_gesto, significado_antigo, novo_signific
     with open('data/movimentos.json', 'w', encoding='utf-8') as arquivo:
         json.dump(movimentos, arquivo, ensure_ascii=False, indent=4)
 
-def salvar_historico(novo_gesto):
-    # Lê o histórico existente ou cria uma lista vazia se o arquivo não existir
-    if os.path.exists("data/historico_gestos.json"):
-        with open('data/historico_gestos.json', 'r', encoding='utf-8') as f:
-            try:
-                historico = json.load(f)
-            except json.JSONDecodeError:
-                historico = []
-    else:
-        historico = []
-
-    # Novo elemento a ser adicionado
-    novo_elemento = {
-        "novo_gesto": novo_gesto,
-        "data": datetime.now().isoformat()
-    }
-
-    historico.append(novo_elemento)
-
-    # Salva de volta no arquivo
-    with open("data/historico_gestos.json", 'w', encoding='utf-8') as f:
-        json.dump(historico, f, ensure_ascii=False, indent=4)
-
-    return True  # ou simplesmente não retornar nada
-
 
 def listar_movimentos():
     with open('data/movimentos.json', 'r', encoding='utf-8') as arquivo:
@@ -97,5 +72,17 @@ def listar_movimentos():
 
 def remover_movimento(gesto):
     movimentos = carregar_movimentos()
-    movimentos = [m for m in movimentos if m["gesto"] != gesto]
-    salvar_movimentos(movimentos)
+
+    # Padroniza o gesto de entrada
+    print(gesto)
+    movimentos_nao_removidos = []
+    for el in movimentos:
+        print(el)
+        if str(el["gesto"]) != str(gesto):
+            print(el["gesto"])
+            print("\n")
+            movimentos_nao_removidos.append(el)
+
+    print(movimentos_nao_removidos)
+    salvar_movimentos(movimentos_nao_removidos)
+

@@ -5,6 +5,5 @@
     "refresh_clima",
     "refresh_rotinas",
     "toca_playlist",
-    "notifica_voz_automacoes",
-    "toca_playlist_notfic"
+    "refresh_playlist"
 ]

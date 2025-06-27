@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmação de Gestos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(3, 60px);
+      gap: 8px;
+    }
+
+    .cell {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    color: #0077cc;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+
+    .center {
+      background-color: #0077cc;
+      color: white;
+    }
+
+    .vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .box {
+      width: 80px;
+      height: 60px;
+      background-color: white;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #0077cc;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .label {
+      font-size: 14px;
+      color: #333;
+      margin-top: 4px;
+    }
+
+    .animate {
+      background-color: #0077cc !important;
+      color: white !important;
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Gestos Detectados</h1>
+
+  <div class="container">
+    <!-- Grid 3x3 -->
+    <div class="grid">
+      
+      <div class="cell"></div>
+      <div class="cell" id="cima"></div>
+      <div class="cell"></div>
+      
+      <div class="cell" id="esquerda"></div>
+      <div class="cell center">•</div>
+      <div class="cell" id="direita"></div>
+      
+      <div class="cell"></div>
+      <div class="cell" id="baixo"></div>
+      <div class="cell"></div>
+    </div>
+
+    <!-- Frente/Trás -->
+    <div class="vertical">
+      <div class="box" id="frente"></div>
+      <div class="box" id="tras"></div>
+    </div>
+  </div>
+
+  <script>
+    const gestos = ["C", "D", "E", "F", "T", "V"]; // exemplo do JSON
+
+    const mapa = {
+    C: { el: "cima",     char: "⇧", nome: "Cima" },
+    V: { el: "baixo",    char: "⇩", nome: "Baixo" },
+    E: { el: "esquerda", char: "⇦", nome: "Esquerda" },
+    D: { el: "direita",  char: "⇨", nome: "Direita" },
+    F: { el: "frente",   char: "⇧", nome: "Frente" },
+    T: { el: "tras",     char: "⇩", nome: "Trás" }
+    };
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function mostrarGestosEmOrdem(lista) {
+      for (let g of lista) {
+        const info = mapa[g];
+        if (!info) continue;
+
+        const el = document.getElementById(info.el);
+        if (!el) continue;
+
+        el.innerHTML = `${info.char}<div class="label"></div>`;
+        el.classList.add("animate");
+
+        await sleep(700);
+
+        el.classList.remove("animate");
+      }
+    }
+
+    mostrarGestosEmOrdem(gestos);
+  </script>
+
+</body>
+</html>

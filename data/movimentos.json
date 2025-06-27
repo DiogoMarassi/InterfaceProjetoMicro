@@ -1,42 +1,30 @@
 [
     {
-        "gesto": "V",
-        "significado": "luz_sala",
-        "genero": ""
-    },
-    {
-        "gesto": "U",
-        "significado": "luz_vermelha",
-        "genero": ""
-    },
-    {
-        "gesto": "O",
-        "significado": "toca_playlist",
-        "genero": "funk"
-    },
-    {
-        "gesto": "ER",
+        "gesto": [
+            "Cima",
+            "Baixo",
+            "Esquerda",
+            "Direita"
+        ],
         "significado": "toca_playlist",
         "genero": "rock"
     },
     {
-        "gesto": "Dj Terroris",
-        "significado": "toca_playlist",
-        "genero": "sertanejo"
-    },
-    {
-        "gesto": "RRRR",
-        "significado": "refresh_rotinas",
+        "gesto": [
+            "Direita",
+            "Esquerda",
+            "Frente",
+            "Trás"
+        ],
+        "significado": "luz_vermelha",
         "genero": ""
     },
     {
-        "gesto": "adasdasf",
+        "gesto": [
+            "Frente",
+            "Trás"
+        ],
         "significado": "toca_playlist",
-        "genero": "jazz"
-    },
-    {
-        "gesto": "asdasdasd",
-        "significado": "playlist",
-        "genero": ""
+        "genero": "funk"
     }
 ]

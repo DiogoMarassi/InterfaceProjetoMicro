@@ -4,16 +4,234 @@
   <meta charset="UTF-8">
   <title>Gravar Gesto</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/gravar.css') }}">
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 30px;
+      text-align: center;
+    }
+
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(3, 60px);
+      gap: 8px;
+    }
+
+    .cell {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: 'Courier New', monospace;
+    font-weight: 900;
+    color: #0077cc;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+
+    .center {
+      background-color: #0077cc;
+      color: white;
+    }
+
+    .vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .box {
+      width: 80px;
+      height: 60px;
+      background-color: white;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #0077cc;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .label {
+      font-size: 14px;
+      color: #333;
+      margin-top: 4px;
+    }
+
+    .animate {
+      background-color: #0077cc !important;
+      color: white !important;
+      transform: scale(1.15);
+    }
+    .container-body {
+      display:flex;
+
+    }
+    .botoes {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .h1 {
+      margin-bottom: 30px;
+    }
+    p {
+      margin: 0px;
+      text-decoration: solid;
+      font-weight: bold;
+      font-size: 30px;
+      gap: 10px;
+
+    }
+    p.sucesso {
+      font-size: 15px;
+    }
+    .setas {
+      text-decoration: solid;
+      font-weight: bold;
+      font-size: 30px;
+    }
+
+    .container-maior {
+      margin-right: 30px;
+    }
+  </style>
 
 </head>
 <body>
-  <div class="container">
-  <a class="botaoHome" href="{{ url_for('home') }}">Home</a>
-  <div class="gravacao">
-    <a class="botao" href="{{ url_for('finalizar') }}">Encerrar gravação</a>
-    <p class="sucesso">A gravação iniciou</p>
+  <div class="container-body">
+    <div class="container-maior">
+      
+      <a class="botaoHome" href="{{ url_for('home') }}">Home</a>
+      <h1>Gestos Detectados</h1>
+
+      <div class="container">
+        <!-- Grid 3x3 -->
+        <div class="grid">
+          
+          <div class="cell"></div>
+          <div class="cell" id="cima"></div>
+          <div class="cell"></div>
+          
+          <div class="cell" id="esquerda"></div>
+          <div class="cell center">•</div>
+          <div class="cell" id="direita"></div>
+          
+          <div class="cell"></div>
+          <div class="cell" id="baixo"></div>
+          <div class="cell"></div>
+        </div>
+
+        <!-- Frente/Trás -->
+        <div class="vertical">
+          <div class="box" id="frente"></div>
+          <div class="box" id="tras"></div>
+        </div>
+      </div>
+
+      <div class="container">
+      <div class="gravacao">
+        <a class="botao" id="botao-vermelho" href="">Resetar gesto</a>
+        <a class="botao" id="botao-verde" href="{{ url_for('finalizar') }}">Confirmar gesto</a>
+        <p class="sucesso">Aperte o botão no sabre para iniciar a gravação</p>
+      </div>
+      </div>
+    </div>
+    <div class="container-maior">
+      <div class="div-mov-pre">
+        <h3>Movimentos Pré-definidos</h3>
+        <div class="botoes">
+
+            <a class="botao botao-predefinido" data-gesto="C,V,E,D"><p class="'setas">⬆︎ ⬇︎ ⬅︎ ➡︎</p></a>
+            <a class="botao botao-predefinido" data-gesto="F,T"><p class="'setas">⬈ ⬋</p></a>
+            <a class="botao botao-predefinido" data-gesto="D,E,F,T"><p class="'setas">➡︎ ⬅︎ ⬈ ⬋</p></a>
+
+        </div>
+      </div>
   </div>
-  </div>
-  
+
+  <script>
+    let gestos = []; // variável global
+
+    const mapa = {
+      C: { el: "cima",     char: "⬆︎", nome: "Cima" },
+      V: { el: "baixo",    char: "⬇︎", nome: "Baixo" },
+      E: { el: "esquerda", char: "⬅︎", nome: "Esquerda" },
+      D: { el: "direita",  char: "➡︎", nome: "Direita" },
+      F: { el: "frente",   char: "⬈", nome: "Frente" },
+      T: { el: "tras",     char: "⬋", nome: "Trás" }
+    };
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function mostrarGestosEmOrdem(lista) {
+      console.log("Mostrando")
+      // limpa conteúdo anterior
+      for (const key in mapa) {
+        const el = document.getElementById(mapa[key].el);
+        if (el) el.innerHTML = '';
+      }
+
+      for (let g of lista) {
+        const info = mapa[g];
+        if (!info) continue;
+
+        const el = document.getElementById(info.el);
+        if (!el) continue;
+
+        el.innerHTML = `${info.char}<div class="label"></div>`;
+        el.classList.add("animate");
+
+        await sleep(700);
+
+        el.classList.remove("animate");
+      }
+    }
+
+    // Adiciona eventos aos botões
+    document.querySelectorAll('.botao-predefinido').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault(); // impede redirecionamento
+        console.log("Foi")
+        const sequencia = btn.dataset.gesto;
+        gestos = sequencia.split(',').map(s => s.trim().toUpperCase());
+        console.log(gestos)
+        mostrarGestosEmOrdem(gestos);
+      });
+    });
+
+    document.getElementById('botao-verde').addEventListener('click', function(e) {
+      e.preventDefault();
+
+      if (!gestos.length) {
+        alert("Nenhum gesto selecionado!");
+        return;
+      }
+
+      const gestoString = gestos.map(g => mapa[g]?.nome || g).join(',');
+      const url = `/finalizar?gesto=${encodeURIComponent(gestoString)}`;
+      window.location.href = url;
+    });
+  </script>
 </body>
 </html>

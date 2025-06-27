@@ -4,20 +4,225 @@
   <meta charset="UTF-8" />
   <title>Home</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+  
 </head>
 <body>
-  <div class="container">
-      <a class="botao" href="{{ url_for('movimentos') }}">Lista de movimentos</a>
-      <a class="botao" href="{{ url_for('mov_pre_definidos') }}">Cadastrar movimentos</a>
-      <a class="botao" href="{{ url_for('ver_tempo') }}">Visualizar tempo</a>
-      <a class="botao" href="{{ url_for('ver_rotinas') }}">Atualizar rotinas</a>
+  <style>
+    /* Reset básico */
+    .container-maior {
+      display: flex;
+      gap: 30px;
 
-      {% if sucesso %}
-          <p style="color: green; margin-top: 16px; text-align: center;">
-              Rotinas atualizadas com sucesso.
-          </p>
-      {% endif %}
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+    }
+
+    /* Botão Home isolado */
+    a.botao:first-of-type {
+      align-self: flex-start;
+      align-self: center;
+    }
+
+    /* Container da tabela */
+    .container {
+      background-color: white;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    /* Tabela */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #0077cc;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .div-movimentos {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Botões principais */
+    a.botao {
+      display: inline-block;
+      padding: 10px 24px;
+      background-color: #0077cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: bold;
+      text-align: center;
+      border: none;
+      align-self: center;
+    }
+
+    a.botao:hover {
+      background-color: #005fa3;
+      transform: scale(1.05);
+      align-self: center;
+    }
+
+    a.botao:active {
+      transform: scale(0.98);
+      align-self: center;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 15px;
+    }
+
+    /* Botão de deletar */
+    a.botao-delete {
+      padding: 6px 12px;
+      background-color: #cc0000;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width:80px;
+      height: 30px;
+    }
+
+    a.botao-edit {
+      padding: 6px 12px;
+      background-color: #0058cc;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width:80px;
+      height: 30px;
+      margin-left: 20px;
+      text-align: center;
+    }
+
+    a.botao-edit:hover {
+      background-color: #002999;
+      transform: scale(1.05);
+    }
+
+    a.botao-edit:active {
+      transform: scale(0.95);
+    }
+
+    a.botao-delete:hover {
+      background-color: #990000;
+      transform: scale(1.05);
+    }
+
+    a.botao-delete:active {
+      transform: scale(0.95);
+    }
+
+    .setas {
+      text-decoration: solid;
+      font-weight: bold;
+      font-size: 30px;
+    }
+    .container-setas {
+      display: flex;
+      gap: 10px;
+    }
+
+
+  </style>
+  <div class="container-maior">
+    <div class="container">
+        
+        <a class="botao" href="{{ url_for('ver_historico') }}">Historico</a>
+        <a class="botao" href="{{ url_for('ver_tempo') }}">Visualizar tempo</a>
+        <a class="botao" href="{{ url_for('ver_rotinas') }}">Atualizar rotinas</a>
+        
+        
+        {% if sucesso %}
+            <p style="color: green; margin-top: 16px; text-align: center;">
+                Rotinas atualizadas com sucesso.
+            </p>
+        {% endif %}
+    </div>
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Gesto</th>
+            <th>Significado</th>
+            <th>Gênero</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <h1>Lista de movimentos cadastrados</h1>
+          {% set mapa = {
+            "Cima": "⬆︎",
+            "Baixo": "⬇︎",
+            "Esquerda": "➡︎",
+            "Direita": "⬅︎",
+            "Frente": "⬈",
+            "Trás": "⬋"
+          } %}
+
+          {% for m in movimentos %}
+            <tr>
+              <td class="container-setas">
+                {% for g in m.gesto %}
+                  <p class="setas">{{ mapa[g] if g in mapa else g }}</p>
+                {% endfor %}
+              </td>
+              <td>{{ m.significado }}</td>
+              <td>{{ m.genero }}</td>
+              <td>
+                <div class="botoes">
+                  <a class='botao-edit' href="{{ url_for('testarMovimento', gesto=m.gesto) }}">Testar</a>
+                  <a class='botao-edit' href="{{ url_for('editarMovimento', gesto=m.gesto) }}">Editar</a>
+                  <a class='botao-delete' href="{{ url_for('removerMovimento', gesto=m.gesto) }}">Apagar</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Cadastrar novo movimento</a>
+    </div>
   </div>
-
 </body>
 </html>
