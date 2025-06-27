@@ -63,7 +63,10 @@
         "data": "2025-06-25T17:59:32.982311"
     },
     {
-        "novo_gesto": "Cima,Baixo,Esquerda,Direita",
+        "novo_gesto": [
+            "Frente",
+            "Trás"
+        ],
         "data": ""
     }
 ]

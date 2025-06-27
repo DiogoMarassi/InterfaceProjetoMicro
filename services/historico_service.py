@@ -11,11 +11,14 @@ def salvar_historico(novo_gesto):
     else:
         historico = []
 
+    lista = novo_gesto.split(",")
     # Novo elemento a ser adicionado
     novo_elemento = {
-        "novo_gesto": novo_gesto,
+        "novo_gesto": lista,
         "data": ""
     }
+
+    
 
     historico.append(novo_elemento)
 
