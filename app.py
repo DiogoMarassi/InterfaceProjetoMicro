@@ -71,10 +71,7 @@ def gravar():
 def finalizar():
     significados = listar_significados()
     gesto = request.args.get('gesto', '')
-
-    # AQUI VAMOS IMPLEMENTAR O HISTÓRICO
     playlists = listar_playlists()
-    salvar_historico(gesto)
     return render_template('finalizar.html', gesto=gesto, significados=significados, playlist_json=playlists)
 
 # Lista de movimentos
