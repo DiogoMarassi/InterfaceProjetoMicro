@@ -5,6 +5,7 @@ from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rot
 from services.significados_service import listar_significados
 from services.playlists_service import listar_playlists
 from services.historico_service import salvar_historico, listar_historico
+import ast
 app = Flask(__name__)
 
 # Integração com o Home Assistant
@@ -13,6 +14,14 @@ def executar(gesto):
     gesto = "\"" + gesto + "\""
     publicar_gesto(gesto)
     return f"Gesto '{gesto}' enviado via MQTT!"
+
+@app.route('/registrar-gesto', methods=['POST'])
+def registrar():
+    dados = request.json
+    print("Recebido:", dados)
+    # Chame sua função Python aqui
+    salvar_historico(dados['gesto'])
+    return {"status": "ok"}
 
 @app.route('/ver_historico')
 def ver_historico():
@@ -119,6 +128,7 @@ def ver_rotinas():
 @app.route('/editar/<gesto>', methods=['GET', 'POST'])
 def editarMovimento(gesto):
     print("Entrou na rota editar")
+    gesto = ast.literal_eval(gesto)
     movimentos = listar_movimentos()
     significados = listar_significados()
 
@@ -134,8 +144,11 @@ def editarMovimento(gesto):
         significado_antigo = movimento['significado']  # <- Pegando o significado atual (antigo)
 
         try:
+            print("gesto enviado")
+            print(gesto)
+            print(type(gesto)) # Envio uma lista de gestos
             editar_movimento(gesto, novo_gesto, significado_antigo, novo_significado)
-            return redirect(url_for('movimentos'))
+            return redirect(url_for('home', gesto=gesto, significados=significados) )
         except ValueError as e:
             return render_template(
                 'editarMovimento.html',
@@ -183,3 +196,4 @@ def testarMovimento(gesto):
 
 if __name__ == '__main__':
     app.run(debug=True)
+    

@@ -1,72 +1,40 @@
 [
     {
         "novo_gesto": [
-            "Direita",
-            "Esquerda",
-            "Frente",
-            "Trás"
-        ],
-        "data": "2025-06-25T13:18:12.473494"
-    },
-    {
-        "novo_gesto": [
             "Cima",
-            "Baixo"
-        ],
-        "data": "2025-06-25T14:02:55.211394"
-    },
-    {
-        "novo_gesto": [
-            "Frente",
-            "Direita",
-            "Trás"
-        ],
-        "data": "2025-06-25T14:17:36.801293"
-    },
-    {
-        "novo_gesto": [
-            "Esquerda",
+            "Baixo",
             "Esquerda",
             "Direita"
         ],
-        "data": "2025-06-25T15:09:10.019283"
+        "data": "2025-06-28 14:02:16"
     },
     {
         "novo_gesto": [
-            "Cima",
             "Frente",
-            "Trás",
-            "Baixo"
-        ],
-        "data": "2025-06-25T16:44:03.604193"
-    },
-    {
-        "novo_gesto": [
             "Trás"
         ],
-        "data": "2025-06-25T17:01:24.124812"
+        "data": "2025-06-28 14:02:35"
     },
     {
         "novo_gesto": [
-            "Frente",
-            "Frente",
-            "Direita"
-        ],
-        "data": "2025-06-25T17:27:48.341000"
-    },
-    {
-        "novo_gesto": [
-            "Cima",
             "Direita",
-            "Baixo"
-        ],
-        "data": "2025-06-25T17:59:32.982311"
-    },
-    {
-        "novo_gesto": [
+            "Esquerda",
+            "Cima",
+            "Baixo",
             "Frente",
             "Trás"
         ],
-        "data": ""
+        "data": "2025-06-28 16:23:43"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Esquerda",
+            "Cima",
+            "Baixo",
+            "Frente",
+            "Baixo"
+        ],
+        "data": "2025-06-28 16:23:49"
     }
 ]

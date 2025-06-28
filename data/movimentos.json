@@ -4,25 +4,17 @@
             "Cima",
             "Baixo",
             "Esquerda",
-            "Direita"
-        ],
-        "significado": "toca_playlist",
-        "genero": "rock"
-    },
-    {
-        "gesto": [
-            "Direita",
-            "Esquerda",
-            "Frente",
-            "Trás"
+            "Cima"
         ],
         "significado": "luz_vermelha",
         "genero": ""
     },
     {
         "gesto": [
-            "Frente",
-            "Trás"
+            "Cima",
+            "Baixo",
+            "Esquerda",
+            "Direita"
         ],
         "significado": "toca_playlist",
         "genero": "funk"

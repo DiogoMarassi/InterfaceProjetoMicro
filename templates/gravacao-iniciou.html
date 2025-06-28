@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Gravar Gesto</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/gravar.css') }}">
     <style>
     body {
@@ -117,6 +118,46 @@
 
 </head>
 <body>
+  <script>
+    const output = document.getElementById("output");
+
+    const client = mqtt.connect("ws://127.0.0.1:9001");
+
+
+    client.on("connect", () => {
+      console.log("[MQTT] Conectado");
+      client.subscribe("sabre/comando", (err) => {
+        if (err) {
+          console.error("[MQTT] Erro ao inscrever:", err);
+        } else {
+          console.log("[MQTT] Inscrito em sabre/gesto");
+        }
+      });
+    });
+
+    client.on("message", (topic, message) => {
+      console.log("[MQTT] Mensagem recebida:", message.toString());
+      console.log(message.toString())
+      gestos = JSON.parse(message.toString()); // transforma string JSON em array
+      mostrarGestosEmOrdem(gestos);
+    });
+
+    client.on("message", (topic, message) => {
+    const gesto = JSON.parse(message.toString());
+    console.log("Recebido no front:", gesto);
+
+    fetch("/registrar-gesto", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gesto })
+    });
+  });
+
+    client.on("error", (err) => {
+      console.error("[MQTT] Erro:", err);
+      output.textContent += `\nErro: ${err.message}`;
+    });
+  </script>
   <div class="container-body">
     <div class="container-maior">
       
@@ -160,7 +201,7 @@
         <h3>Movimentos Pré-definidos</h3>
         <div class="botoes">
 
-            <a class="botao botao-predefinido" data-gesto="C,V,E,D"><p class="'setas">⬆︎ ⬇︎ ⬅︎ ➡︎</p></a>
+            <a class="botao botao-predefinido" data-gesto="C,B,E,D"><p class="'setas">⬆︎ ⬇︎ ⬅︎ ➡︎</p></a>
             <a class="botao botao-predefinido" data-gesto="F,T"><p class="'setas">⬈ ⬋</p></a>
             <a class="botao botao-predefinido" data-gesto="D,E,F,T"><p class="'setas">➡︎ ⬅︎ ⬈ ⬋</p></a>
 
@@ -173,7 +214,7 @@
 
     const mapa = {
       C: { el: "cima",     char: "⬆︎", nome: "Cima" },
-      V: { el: "baixo",    char: "⬇︎", nome: "Baixo" },
+      B: { el: "baixo",    char: "⬇︎", nome: "Baixo" },
       E: { el: "esquerda", char: "⬅︎", nome: "Esquerda" },
       D: { el: "direita",  char: "➡︎", nome: "Direita" },
       F: { el: "frente",   char: "⬈", nome: "Frente" },
@@ -186,6 +227,8 @@
 
     async function mostrarGestosEmOrdem(lista) {
       console.log("Mostrando")
+      console.log("Lista dentro da função mostrarGestos")
+      console.log(lista)
       // limpa conteúdo anterior
       for (const key in mapa) {
         const el = document.getElementById(mapa[key].el);
@@ -232,6 +275,7 @@
       const url = `/finalizar?gesto=${encodeURIComponent(gestoString)}`;
       window.location.href = url;
     });
+
   </script>
 </body>
 </html>

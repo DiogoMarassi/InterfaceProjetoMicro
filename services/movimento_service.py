@@ -38,19 +38,24 @@ def adicionar_movimento(gesto, significado, genero, playlist=None):
     movimentos.append(novo_movimento)
     salvar_movimentos(movimentos)
 
-
+import ast
 
 def editar_movimento(gesto_antigo, novo_gesto, significado_antigo, novo_significado):
+    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     movimentos = listar_movimentos()
+    print(movimentos)
 
+    novo_gesto = ast.literal_eval(novo_gesto)
+    print(novo_gesto)
+    print(type(novo_gesto))
     movimento = next((m for m in movimentos if m['gesto'] == gesto_antigo), None)
 
     if movimento is None:
         raise ValueError("Gesto não encontrado.")
 
     # Verifica se o novo gesto já existe (e não é o próprio gesto que estamos editando)
-    if novo_gesto != gesto_antigo and any(m['gesto'] == novo_gesto for m in movimentos):
-        raise ValueError("O novo gesto já existe.")
+    if any(m["gesto"] == novo_gesto for m in movimentos):
+        raise ValueError(f"Gesto '{novo_gesto}' já existe.")
 
     # Verifica se o novo significado já existe (e não é o próprio significado que estamos editando)
     if novo_significado != significado_antigo and any(m['significado'] == novo_significado for m in movimentos):
