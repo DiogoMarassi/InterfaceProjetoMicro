@@ -14,22 +14,29 @@ def salvar_movimentos(movimentos):
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(movimentos, f, indent=4, ensure_ascii=False)
 
-def adicionar_movimento(gesto, significado, genero, playlist=None):
+def adicionar_movimento(gesto, significado, genero, idioma, playlist=None):
     movimentos = carregar_movimentos()
 
     # Verifica se já existe um gesto com o mesmo nome (case-insensitive)
     if any(m["gesto"] == gesto for m in movimentos):
         raise ValueError(f"Gesto '{gesto}' já existe.")
 
-    # Verifica se o significado já existe, exceto se for 'toca_playlist'
-    if significado.lower() != "toca_playlist":
+    # Verifica se o significado já existe, exceto se for 'toca_playlist' ou notifica
+    print("Singificado -------------------")
+    print(significado.lower())
+    if significado.lower() in "toca_playlist":
         if any(m["significado"].lower() == significado.lower() for m in movimentos):
             raise ValueError(f"Significado '{significado}' já existe.")
 
+    if significado.lower() in "notifica_tempo":
+        if any(m["significado"].lower() == significado.lower() for m in movimentos):
+            raise ValueError(f"Significado '{significado}' já existe.")
+        
     novo_movimento = {
         "gesto": gesto,
         "significado": significado,
-        "genero": genero
+        "genero": genero,
+        "idioma": idioma
     }
 
     if significado.lower() == "toca_playlist" and playlist:

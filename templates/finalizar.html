@@ -31,7 +31,7 @@
         {% endfor %}
       </select><br><br>
 
-      <!-- NOVO SELECT DE PLAYLISTS (inicialmente escondido) -->
+      <!-- SELECT DE PLAYLISTS (inicialmente escondido) -->
       <div id="playlist-container" style="display: none;">
         <h3><label>Selecione a playlist:</label></h3><br>
         <select class="input" name="genero">
@@ -41,6 +41,14 @@
         </select><br><br>
       </div>
 
+      <!-- SELECT DE IDIOMA (inicialmente escondido) -->
+      <div id="idioma-container" style="display: none;">
+        <h3><label>Selecione o idioma da notificação:</label></h3><br>
+        <select class="input" name="idioma">
+          <option value="pt">Português</option>
+          <option value="en">Inglês</option>
+        </select><br><br>
+      </div>
 
       <button class="botao" type="submit">Cadastrar movimento</button>
     </form>
@@ -51,25 +59,26 @@
 </body>
 </html>
 
-<!-- ...continua o restante do HTML... -->
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const significadoSelect = document.getElementById('significado-select');
     const playlistContainer = document.getElementById('playlist-container');
+    const idiomaContainer = document.getElementById('idioma-container');
 
-    function togglePlaylist() {
-      if (significadoSelect.value === 'toca_playlist') {
-        playlistContainer.style.display = 'block';
-      } else {
-        playlistContainer.style.display = 'none';
-      }
+    function toggleCamposExtras() {
+      const valor = significadoSelect.value;
+
+      // Mostra ou esconde o select de playlists
+      playlistContainer.style.display = (valor === 'toca_playlist') ? 'block' : 'none';
+
+      // Mostra ou esconde o select de idioma
+      idiomaContainer.style.display = (valor === 'notifica_tempo') ? 'block' : 'none';
     }
 
     // Inicializa ao carregar
-    togglePlaylist();
+    toggleCamposExtras();
 
     // Atualiza ao mudar a seleção
-    significadoSelect.addEventListener('change', togglePlaylist);
+    significadoSelect.addEventListener('change', toggleCamposExtras);
   });
 </script>

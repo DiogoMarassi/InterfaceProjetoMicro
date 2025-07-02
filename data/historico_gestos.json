@@ -85,5 +85,110 @@
             "Baixo"
         ],
         "data": "2025-06-28 16:33:08"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente"
+        ],
+        "data": "2025-06-30 07:49:51"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente"
+        ],
+        "data": "2025-06-30 07:50:06"
+    },
+    {
+        "novo_gesto": [
+            "Cima",
+            "Baixo"
+        ],
+        "data": "2025-06-30 07:50:20"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente",
+            "Cima",
+            "Trás"
+        ],
+        "data": "2025-06-30 07:53:14"
+    },
+    {
+        "novo_gesto": [
+            "Cima",
+            "Baixo"
+        ],
+        "data": "2025-06-30 07:54:36"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente",
+            "Cima",
+            "Baixo"
+        ],
+        "data": "2025-07-02 13:05:06"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente",
+            "Cima",
+            "Baixo"
+        ],
+        "data": "2025-07-02 13:05:12"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente",
+            "Cima",
+            "Baixo"
+        ],
+        "data": "2025-07-02 13:16:34"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente"
+        ],
+        "data": "2025-07-02 14:52:20"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Frente"
+        ],
+        "data": "2025-07-02 15:07:47"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Esquerda",
+            "Frente",
+            "Trás"
+        ],
+        "data": "2025-07-02 15:25:15"
+    },
+    {
+        "novo_gesto": [
+            "Direita",
+            "Esquerda",
+            "Frente",
+            "Trás"
+        ],
+        "data": "2025-07-02 15:25:39"
+    },
+    {
+        "novo_gesto": [
+            "Cima",
+            "Direita",
+            "Esquerda",
+            "Frente"
+        ],
+        "data": "2025-07-02 15:29:49"
     }
 ]

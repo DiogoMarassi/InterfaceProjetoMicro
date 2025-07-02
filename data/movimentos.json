@@ -1,43 +1,22 @@
 [
     {
         "gesto": [
-            "Cima",
-            "Baixo",
+            "Frente",
+            "Trás"
+        ],
+        "significado": "notifica_tempo",
+        "genero": "",
+        "idioma": "en"
+    },
+    {
+        "gesto": [
+            "Direita",
             "Esquerda",
-            "Cima"
+            "Frente",
+            "Trás"
         ],
         "significado": "luz_vermelha",
-        "genero": ""
-    },
-    {
-        "gesto": [
-            "Cima",
-            "Baixo",
-            "Esquerda",
-            "Direita"
-        ],
-        "significado": "toca_playlist",
-        "genero": "funk"
-    },
-    {
-        "gesto": [
-            "Direita",
-            "Esquerda",
-            "Cima",
-            "Baixo",
-            "Frente",
-            "Baixo"
-        ],
-        "significado": "toca_playlist",
-        "genero": "funk"
-    },
-    {
-        "gesto": [
-            "Direita",
-            "Esquerda",
-            "Cima"
-        ],
-        "significado": "toca_playlist",
-        "genero": "jazz"
+        "genero": "",
+        "idioma": "pt"
     }
 ]

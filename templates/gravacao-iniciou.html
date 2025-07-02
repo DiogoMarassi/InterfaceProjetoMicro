@@ -120,8 +120,7 @@
 <body>
   <script>
     const output = document.getElementById("output");
-
-    const client = mqtt.connect("ws://127.0.0.1:9001");
+    const client = mqtt.connect("ws://localhost:9001");
 
 
     client.on("connect", () => {
