@@ -48,7 +48,9 @@ a.botao {
   font-weight: bold;
   text-align: center;
 }
-
+a.botao:hover {
+  cursor: pointer;
+}
 #botao-vermelho {
   background-color: #cc0000;
   color: white;

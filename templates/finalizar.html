@@ -31,6 +31,15 @@
         {% endfor %}
       </select><br><br>
 
+      <div>
+        <h3><label>Selecione a cor do novo gesto:</label></h3><br>
+        <select class="input" name="cor">
+          {% for cor in cores %}
+            <option value="{{ cor }}">{{ cor }}</option>
+          {% endfor %}
+        </select><br><br>
+      </div>
+
       <!-- SELECT DE PLAYLISTS (inicialmente escondido) -->
       <div id="playlist-container" style="display: none;">
         <h3><label>Selecione a playlist:</label></h3><br>

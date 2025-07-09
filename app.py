@@ -5,6 +5,7 @@ from services.mqtt_service import publicar_gesto, solicitar_clima, solicitar_rot
 from services.significados_service import listar_significados
 from services.playlists_service import listar_playlists
 from services.historico_service import salvar_historico, listar_historico
+from services.cor_service import listar_cor
 import ast
 app = Flask(__name__)
 
@@ -72,7 +73,8 @@ def finalizar():
     significados = listar_significados()
     gesto = request.args.get('gesto', '')
     playlists = listar_playlists()
-    return render_template('finalizar.html', gesto=gesto, significados=significados, playlist_json=playlists)
+    cores = listar_cor()
+    return render_template('finalizar.html', gesto=gesto, significados=significados, playlist_json=playlists, cores=cores)
 
 # Lista de movimentos
 @app.route('/movimentos')
@@ -88,48 +90,61 @@ def extrair_iniciais(texto):
 # CRUD DO MOVIMENTO
 @app.route('/cadastrar', methods=['POST'])
 def cadastrarMovimento():
-    gesto = request.form['gesto']
-    significado = request.form['significado']
-    genero = request.form['genero']
-    print(genero)
+    # --- Captura de dados do formulário ---
+    gesto = request.form.get('gesto', '').strip()
+    significado = request.form.get('significado', '').strip()
+    genero = request.form.get('genero', '').strip()
+    cor = request.form.get('cor', '').strip()
+    idioma = request.form.get('idioma', '').strip()
 
-    significados = listar_significados()
-    playlists = listar_playlists()
+    print(f"Gênero selecionado: {genero}")
+    print(f"Estou trabalhando com o gesto: {gesto} ({type(gesto)})")
 
-    # ENVIAR GESTOS PARA O SABRE/COMANDO/GESTO
-    print("Estou trabalhando com o gesto abaixo:")
-    print(gesto)
-    print(type(gesto))
-    dados_para_enviar_gesto = extrair_iniciais(gesto)
-    print(dados_para_enviar_gesto)
-    enviar_gesto_mqtt(dados_para_enviar_gesto)
-    print("saiu do mqtt")
+    # --- Pré-processamento ---
+    lista_gestos = [g.strip().capitalize() for g in gesto.split(',') if g.strip()]
+    if significado != 'toca_playlist':
+        genero = ''
+    if significado != 'notifica_tempo':
+        idioma = ''    
 
-    # ----- NOVO TRECHO: capturar e exibir idioma selecionado -----
-    idioma = request.form.get('idioma')  # retorna None se não enviado
-
+    # --- Cadastro do gesto ---
     try:
-        lista_gestos = [g.strip().capitalize() for g in gesto.split(',') if g.strip()]
-        if significado != 'toca_playlist':
-            genero = ''
-        adicionar_movimento(lista_gestos, significado, genero, idioma)
-        jsonGestos = listar_movimentos()
-
-        gestosFormatados = [''.join(g[0] for g in item['gesto']).lower() for item in jsonGestos]
-        print("json gestos --------------------------------")
-        print(gestosFormatados)
-        print(type(gestosFormatados))
-
-        envia_lista_para_sabre(gestosFormatados)
-        return redirect(url_for('home', gesto=gesto, significado=significado, significados=significados))
+        adicionar_movimento(lista_gestos, significado, genero, idioma, cor)
     except ValueError as e:
         return render_template(
             'finalizar.html',
             erro=str(e),
             significado=significado,
-            significados=significados,
-            playlist_json=playlists
+            significados=listar_significados(),
+            playlist_json=listar_playlists(),
+            cores=listar_cor()
         )
+
+    # --- Envio para MQTT (LUCAS) ---
+    try:
+        dados_para_enviar_gesto = extrair_iniciais(gesto)
+        enviar_gesto_mqtt(dados_para_enviar_gesto)
+        print("Enviado ao MQTT com sucesso.")
+    except Exception as e:
+        print(f"Erro ao enviar para MQTT: {e}")
+
+    # --- Envio para SABRE (GRATZ) (não bloqueia o fluxo se falhar) ---
+    try:
+        jsonGestos = listar_movimentos()
+        gestosFormatados = [''.join(g[0] for g in item['gesto']).lower() for item in jsonGestos]
+        envia_lista_para_sabre(gestosFormatados)
+        print("Enviado ao SABRE com sucesso.")
+    except Exception as e:
+        print(f"Erro ao enviar para SABRE: {e}")
+
+    # --- Redirecionamento final ---
+    return redirect(url_for(
+        'home',
+        gesto=gesto,
+        significado=significado,
+        significados=listar_significados()
+    ))
+
 
 
 @app.route('/remover/<gesto>')
@@ -155,7 +170,7 @@ def editarMovimento(gesto):
     gesto = ast.literal_eval(gesto)
     movimentos = listar_movimentos()
     significados = listar_significados()
-
+    
     movimento = next((m for m in movimentos if m['gesto'] == gesto), None)
 
     if movimento is None:
@@ -164,21 +179,39 @@ def editarMovimento(gesto):
     if request.method == 'POST':
         novo_gesto = request.form['novo_gesto']
         novo_significado = request.form['significado']
-
-        significado_antigo = movimento['significado']  # <- Pegando o significado atual (antigo)
+        nova_cor = request.form.get('cor', '')
+        novo_genero = request.form.get('genero', '')
+        novo_idioma = request.form.get('idioma', '')
+        significado_antigo = movimento['significado']
 
         try:
             print("gesto enviado")
             print(gesto)
-            print(type(gesto)) # Envio uma lista de gestos
-            editar_movimento(gesto, novo_gesto, significado_antigo, novo_significado)
-            return redirect(url_for('home', gesto=gesto, significados=significados) )
+            print(type(gesto))
+
+            editar_movimento(
+                gesto_antigo=gesto,
+                novo_gesto=novo_gesto,
+                significado_antigo=significado_antigo,
+                novo_significado=novo_significado,
+                nova_cor=nova_cor,
+                novo_genero=novo_genero,
+                novo_idioma=novo_idioma
+            )
+
+            return redirect(url_for('home', gesto=gesto, significados=significados))
+
         except ValueError as e:
             return render_template(
                 'editarMovimento.html',
                 gesto=novo_gesto,
                 significado=novo_significado,
+                genero=novo_genero,
+                cor=nova_cor,
+                idioma=novo_idioma,
                 significados=significados,
+                cores=listar_cor(),
+                playlist_json=listar_playlists(),
                 erro=str(e)
             )
 
@@ -186,8 +219,14 @@ def editarMovimento(gesto):
         'editarMovimento.html',
         gesto=movimento['gesto'],
         significado=movimento['significado'],
-        significados=significados
+        genero=movimento.get('genero', ''),
+        cor=movimento.get('cor', ''),
+        idioma=movimento.get('idioma', ''),
+        significados=significados,
+        cores=listar_cor(),
+        playlist_json=listar_playlists(),
     )
+
 
 import ast
 

@@ -46,8 +46,7 @@
       flex-direction: column;
       align-items: center;
       gap: 25px;
-      width: 90%;
-      max-width: 800px;
+      max-width: 100%;
     }
 
     /* Tabela */
@@ -188,7 +187,8 @@
           <tr>
             <th>Gesto</th>
             <th>Significado</th>
-            <th>Gênero</th>
+            <th>Gênero da musica</th>
+            <th>Cor do sabre</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -212,6 +212,7 @@
               </td>
               <td>{{ m.significado }}</td>
               <td>{{ m.genero }}</td>
+              <td>{{ m.cor }}</td> <!-- nova coluna -->
               <td>
                 <div class="botoes">
                   <a class='botao-edit' href="{{ url_for('testarMovimento', gesto=m.gesto) }}">Testar</a>
@@ -226,6 +227,7 @@
 
       <a class="botao" href="{{ url_for('gravacao_iniciou') }}">Cadastrar novo movimento</a>
     </div>
+
   </div>
 </body>
 </html>

@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Editar Movimento</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/editarMovimento.css') }}">
-
 </head>
 <body>
   <div class="container">
@@ -12,25 +11,68 @@
 
     <form action="{{ url_for('editarMovimento', gesto=gesto) }}" method="POST">
       <label>Gesto:</label><br>
-      <input class="input" type="text" name="novo_gesto" value="{{ gesto }}" required><br>
+      <input class="input" type="text" name="novo_gesto" value="{{ gesto }}" required><br><br>
 
       <label>Significado:</label><br>
-      <select class="input" name="significado" required>
+      <select class="input" name="significado" id="significado-select" required>
         <option value="" disabled>Escolha um significado</option>
         {% for s in significados %}
           <option value="{{ s }}" {% if s == significado %}selected{% endif %}>
             {{ s }}
           </option>
         {% endfor %}
-      </select><br>
+      </select><br><br>
+
+      <!-- COR -->
+      <label>Cor:</label><br>
+      <select class="input" name="cor">
+        {% for c in cores %}
+          <option value="{{ c }}" {% if c == cor %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select><br><br>
+
+      <!-- PLAYLIST -->
+      <div id="playlist-container" style="display: none;">
+        <label>Playlist:</label><br>
+        <select class="input" name="genero">
+          {% for nome, link in playlist_json.items() %}
+            <option value="{{ nome }}" {% if nome == genero %}selected{% endif %}>{{ nome }}</option>
+          {% endfor %}
+        </select><br><br>
+      </div>
+
+      <!-- IDIOMA -->
+      <div id="idioma-container" style="display: none;">
+        <label>Idioma da notificação:</label><br>
+        <select class="input" name="idioma">
+          <option value="pt" {% if idioma == 'pt' %}selected{% endif %}>Português</option>
+          <option value="en" {% if idioma == 'en' %}selected{% endif %}>Inglês</option>
+        </select><br><br>
+      </div>
 
       <button class="botao" type="submit">Salvar Alterações</button>
     </form>
 
     {% if erro %}
-      <p>{{ erro }}</p>
+      <p class="erro">{{ erro }}</p>
     {% endif %}
   </div>
 </body>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const significadoSelect = document.getElementById('significado-select');
+    const playlistContainer = document.getElementById('playlist-container');
+    const idiomaContainer = document.getElementById('idioma-container');
+
+    function toggleCamposExtras() {
+      const valor = significadoSelect.value;
+      playlistContainer.style.display = (valor === 'toca_playlist') ? 'block' : 'none';
+      idiomaContainer.style.display = (valor === 'notifica_tempo') ? 'block' : 'none';
+    }
+
+    toggleCamposExtras();
+    significadoSelect.addEventListener('change', toggleCamposExtras);
+  });
+</script>
 </html>
