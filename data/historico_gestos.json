@@ -239,5 +239,32 @@
             "Frente"
         ],
         "data": "2025-07-09 09:16:02"
+    },
+    {
+        "novo_gesto": [
+            "Frente",
+            "Cima",
+            "Baixo",
+            "Cima",
+            "Frente",
+            "Baixo"
+        ],
+        "data": "2025-07-09 15:15:07"
+    },
+    {
+        "novo_gesto": [
+            "Cima",
+            "Baixo",
+            "Cima"
+        ],
+        "data": "2025-07-09 17:26:11"
+    },
+    {
+        "novo_gesto": [
+            "Cima",
+            "Baixo",
+            "Cima"
+        ],
+        "data": "2025-07-09 17:27:11"
     }
 ]

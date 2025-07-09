@@ -16,7 +16,7 @@ BROKER_PRINCIPAL = {
 
 # MEU BROKER PARA CONTATO COM GRATZ
 BROKER_GESTO_DIRETO = {
-    "host": "172.22.144.1",
+    "host": "192.168.0.136",
     "port": 1883
 }
 
@@ -35,40 +35,81 @@ TOPICO_GESTO_DIRETO = "sabre/comando/gesto"
 TOPICO_FEITO = "sabre/comando/feito"
 
 mapa_movimentos = {
-    'f': 'Frente',
-    't': 'Trás',
-    'd': 'Direita',
-    'e': 'Esquerda',
-    'c': 'Cima',
-    'b': 'Baixo'
+    'f': 'Frente', 'F': 'Frente',
+    't': 'Trás',   'T': 'Trás',
+    'd': 'Direita','D': 'Direita',
+    'e': 'Esquerda','E': 'Esquerda',
+    'c': 'Cima',   'C': 'Cima',
+    'b': 'Baixo',  'B': 'Baixo'
 }
 
+import json
+import requests
+from urllib.parse import quote
 
 def on_message_nova(client, userdata, msg):
     try:
+        print("ENTROU PARA ENVIAR PARA O LUCAS")
+        
+        # Decodifica o payload recebido
         payload = msg.payload.decode('utf-8')
         print(f"[MQTT] Mensagem recebida no tópico {msg.topic}: {payload}")
+        
+        # Tenta carregar o JSON
+        try:
+            movimentos_compactados = json.loads(payload)
+        except json.JSONDecodeError as e:
+            print(f"[ERRO] Payload recebido não é JSON válido: {e}")
+            return
 
-        # Converte string JSON para lista com string (ex: ['fte'] → 'fte')
-        movimentos_compactados = json.loads(payload)[0]
+        # Aceita ["F", "T"] ou [["F", "T"]]
+        if isinstance(movimentos_compactados, list):
+            if len(movimentos_compactados) == 0:
+                print("[AVISO] Lista de movimentos recebida está vazia.")
+                return
+            if isinstance(movimentos_compactados[0], list):
+                movimentos_compactados = movimentos_compactados[0]
+        else:
+            print(f"[ERRO] Estrutura inválida: esperado lista, recebido {type(movimentos_compactados)}")
+            return
 
-        # Expande para lista com nomes completos
-        movimentos = [mapa_movimentos[letra] for letra in movimentos_compactados]
+        # Verifica se todos os elementos são strings de 1 caractere
+        if not all(isinstance(l, str) and len(l) == 1 for l in movimentos_compactados):
+            print(f"[ERRO] Lista de letras malformada: {movimentos_compactados}")
+            return
+
+        # Expande letras para nomes de gestos via mapa_movimentos
+        movimentos = []
+        for letra in movimentos_compactados:
+            nome = mapa_movimentos.get(letra.upper())
+            if not nome:
+                print(f"[AVISO] Letra desconhecida recebida: {letra}")
+                continue
+            movimentos.append(nome)
+
+        if not movimentos:
+            print("[AVISO] Nenhum movimento válido encontrado após decodificação.")
+            return
 
         print("MOVIMENTOS DECODIFICADOS ---------------------------")
         print(movimentos)
 
-        # Faz chamada à rota Flask passando os nomes
-        resposta = requests.get(f"http://localhost:5000/testarMovimento/{json.dumps(movimentos)}")
+        # Codifica a lista para ser usada na URL com segurança
+        movimentos_json = json.dumps(movimentos, ensure_ascii=False)
+        movimentos_encoded = quote(movimentos_json)
+
+        url = f"http://localhost:5000/testarMovimento/{movimentos_encoded}"
+        resposta = requests.get(url)
+
         print(f"[MQTT → Flask] Resposta: {resposta.status_code} - {resposta.text}")
 
     except Exception as e:
         print(f"[MQTT ERRO] Falha ao processar mensagem recebida: {e}")
 
+
 def iniciar_escuta_mqtt():
     client = mqtt.Client()
     client.connect(BROKER_GESTO_DIRETO["host"], BROKER_GESTO_DIRETO["port"], 60)
-
     client.subscribe(TOPICO_FEITO)
     client.on_message = on_message_nova
 
@@ -142,18 +183,28 @@ def solicitar_dado(broker: dict, topico_publicar: str, mensagem: str, topico_res
 
 # =========================== CALLBACK DE MENSAGENS ===========================
 
+import time
 def envia_lista_para_sabre(listaMovimentos):
-    """Envia uma lista de movimentos em formato JSON para o tópico sabre/comando/gesto"""
     try:
         client = mqtt.Client()
+        client.enable_logger()
         client.connect(BROKER_GESTO_DIRETO["host"], BROKER_GESTO_DIRETO["port"], 60)
-        
+
+        client.loop_start()  # <<< inicia thread de rede
+
         mensagem = json.dumps(listaMovimentos)
-        client.publish("sabre/comando/gesto", mensagem)
+        result = client.publish(TOPICO_GESTO_DIRETO, mensagem, retain=True)
+        result.wait_for_publish()
+
+        time.sleep(0.5)  # <<< garante tempo para enviar
+
+        client.loop_stop()
         client.disconnect()
+
         print(f"[MQTT] Lista enviada com sucesso: {mensagem}")
     except Exception as e:
         print(f"[MQTT ERRO] Falha ao enviar lista: {e}")
+
 
 def on_message(client, userdata, msg):
     """Callback para tratamento de mensagens recebidas."""

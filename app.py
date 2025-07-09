@@ -121,17 +121,31 @@ def cadastrarMovimento():
         )
 
     # --- Envio para MQTT (LUCAS) ---
-    try:
-        dados_para_enviar_gesto = extrair_iniciais(gesto)
-        enviar_gesto_mqtt(dados_para_enviar_gesto)
-        print("Enviado ao MQTT com sucesso.")
-    except Exception as e:
-        print(f"Erro ao enviar para MQTT: {e}")
+    #
+    #try:
+     #   dados_para_enviar_gesto = extrair_iniciais(gesto)
+      #  enviar_gesto_mqtt(dados_para_enviar_gesto)
+       # print("Enviado ao MQTT com sucesso.")
+    #except Exception as e:
+     #   print(f"Erro ao enviar para MQTT: {e}")
 
     # --- Envio para SABRE (GRATZ) (não bloqueia o fluxo se falhar) ---
     try:
         jsonGestos = listar_movimentos()
-        gestosFormatados = [''.join(g[0] for g in item['gesto']).lower() for item in jsonGestos]
+        print("JSON GESTOS --------------------")
+        print(jsonGestos)
+        gestosFormatados = [
+        {
+            "gesto": [g[0].upper() for g in item["gesto"]],
+            "cor": item["cor"]
+        }
+        for item in jsonGestos
+        ]
+        print("GESTOS FORMATADOS")
+        print(gestosFormatados)
+
+        
+
         envia_lista_para_sabre(gestosFormatados)
         print("Enviado ao SABRE com sucesso.")
     except Exception as e:
@@ -172,7 +186,23 @@ def editarMovimento(gesto):
     significados = listar_significados()
     
     movimento = next((m for m in movimentos if m['gesto'] == gesto), None)
+    jsonGestos = listar_movimentos()
+    print("JSON GESTOS --------------------")
+    print(jsonGestos)
+    gestosFormatados = [
+    {
+        "gesto": [g[0].upper() for g in item["gesto"]],
+        "cor": item["cor"]
+    }
+    for item in jsonGestos
+    ]
+    print("GESTOS FORMATADOS")
+    print(gestosFormatados)
 
+        
+
+    envia_lista_para_sabre(gestosFormatados)
+    
     if movimento is None:
         return f"Gesto '{gesto}' não encontrado.", 404
 
@@ -229,10 +259,11 @@ def editarMovimento(gesto):
 
 
 import ast
+from ast import literal_eval
 
 @app.route('/testarMovimento/<gesto>')
 def testarMovimento(gesto):
-    from ast import literal_eval
+    
 
     movimentos = carregar_movimentos()
 

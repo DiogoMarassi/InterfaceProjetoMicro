@@ -1,8 +1,10 @@
 [
     "luz_sala",
     "luz_vermelha",
+    "musica",
     "refresh_clima",
     "refresh_rotinas",
     "toca_playlist",
-    "notifica_tempo"
+    "notifica_voz_automacoes",
+    "toca_playlist_notfic"
 ]

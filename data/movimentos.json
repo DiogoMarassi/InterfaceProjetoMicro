@@ -13,34 +13,12 @@
     },
     {
         "gesto": [
-            "Direita",
-            "Frente"
-        ],
-        "significado": "luz_sala",
-        "genero": "",
-        "cor": "amarelo",
-        "idioma": ""
-    },
-    {
-        "gesto": [
             "Cima",
-            "Baixo",
-            "Esquerda",
-            "Direita"
-        ],
-        "significado": "notifica_tempo",
-        "genero": "",
-        "cor": "azul",
-        "idioma": "en"
-    },
-    {
-        "gesto": [
-            "Trás",
-            "Frente"
+            "Baixo"
         ],
         "significado": "luz_vermelha",
         "genero": "",
-        "cor": "amarelo",
+        "cor": "branco",
         "idioma": ""
     },
     {
@@ -54,5 +32,49 @@
         "genero": "jazz",
         "cor": "verde",
         "idioma": ""
+    },
+    {
+        "gesto": [
+            "Cima",
+            "Baixo",
+            "Esquerda"
+        ],
+        "significado": "toca_playlist",
+        "genero": "funk",
+        "cor": "laranja",
+        "idioma": ""
+    },
+    {
+        "gesto": [
+            "Direita",
+            "Esquerda",
+            "Frente",
+            "Trás"
+        ],
+        "significado": "toca_playlist",
+        "genero": "pagode",
+        "cor": "amarelo",
+        "idioma": ""
+    },
+    {
+        "gesto": [
+            "Frente",
+            "Trás"
+        ],
+        "significado": "luz_sala",
+        "genero": "",
+        "cor": "roxo",
+        "idioma": ""
+    },
+    {
+        "gesto": [
+            "Cima",
+            "Baixo",
+            "Cima"
+        ],
+        "significado": "notifica_tempo",
+        "genero": "",
+        "cor": "vermelho",
+        "idioma": "en"
     }
 ]
